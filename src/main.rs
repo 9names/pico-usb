@@ -13,7 +13,7 @@ mod usb;
 
 #[link_section = ".boot_loader"]
 #[used]
-pub static BOOT_LOADER: [u8; 256] = rp2040_boot2::BOOT_LOADER;
+pub static BOOT_LOADER: [u8; 256] = rp2040_boot2::BOOT_LOADER_W25Q080;
 
 /// Handle peripheral resets so the chip is usable.
 unsafe fn setup_chip(p: &mut rp2040_pac::Peripherals) {
@@ -556,16 +556,16 @@ fn main() -> ! {
     });
 
     // Configure pin 25 for GPIO
-    p.PADS_BANK0.gpio25.write(|w| {
+    p.PADS_BANK0.gpio[25].write(|w| {
         // Output Disable off
         w.od().clear_bit();
         // Input Enable on
         w.ie().set_bit();
         w
     });
-    p.IO_BANK0.gpio25_ctrl.write(|w| {
+    p.IO_BANK0.gpio[25].gpio_ctrl.write(|w| {
         // Map pin 25 to SIO
-        w.funcsel().sio_25();
+        w.funcsel().sio_0();
         w
     });
 
